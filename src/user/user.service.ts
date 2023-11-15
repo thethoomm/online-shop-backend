@@ -1,27 +1,29 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dtos/createUser.dto';
-import { UserEntity } from './entities/user.entity';
 import { hash } from 'bcrypt';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { PrismaService } from '../prisma/prisma.service';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class UserService {
-  constructor(
-    @InjectRepository(UserEntity)
-    private readonly userModel: Repository<UserEntity>,
-  ) {}
-  async createUser(createUserDto: CreateUserDto): Promise<UserEntity> {
+  constructor(private prisma: PrismaService) {}
+  async createUser(createUserDto: CreateUserDto): Promise<User> {
     const saltOrRounds = 10;
     const passwordHashed = await hash(createUserDto.password, saltOrRounds);
 
-    return this.userModel.save({
-      ...createUserDto,
-      password: passwordHashed,
+    return this.prisma.user.create({
+      data: {
+        name: createUserDto.name,
+        email: createUserDto.email,
+        cpf: createUserDto.cpf,
+        phone: createUserDto.phone,
+        password: passwordHashed,
+        type_user: 0,
+      },
     });
   }
 
-  async getAllUsers(): Promise<UserEntity[]> {
-    return this.userModel.find();
+  async getAllUsers(): Promise<User[]> {
+    return this.prisma.user.findMany();
   }
 }

@@ -1,26 +1,16 @@
 import { Module } from '@nestjs/common';
 import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { PrismaService } from './prisma/prisma.service';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: ['.env.development.local'],
-    }),
-    TypeOrmModule.forRoot({
-      database: process.env.DB_DATABASE,
-      host: process.env.DB_HOST,
-      password: process.env.DB_PASSWORD,
-      port: Number(process.env.DB_PORT),
-      username: process.env.DB_USERNAME,
-      type: 'postgres',
-      synchronize: true,
-      entities: [`${__dirname}/**/*.entity{.js, .ts}`],
+      envFilePath: ['.env'],
     }),
     UserModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [PrismaService],
 })
 export class AppModule {}
