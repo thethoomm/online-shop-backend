@@ -8,5 +8,6 @@ import { CacheModule } from 'src/cache/cache.module';
   imports: [CacheModule],
   controllers: [CityController],
   providers: [CityService, PrismaService],
+  exports: [CityService],
 })
 export class CityModule {}
