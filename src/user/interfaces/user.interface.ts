@@ -1,7 +1,7 @@
-export interface CreateUserDto {
+export interface UserInterface {
   name: string;
   email: string;
-  phone: string;
   cpf: string;
+  phone: string;
   password: string;
 }
